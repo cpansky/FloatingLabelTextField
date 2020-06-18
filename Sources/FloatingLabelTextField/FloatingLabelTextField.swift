@@ -1,6 +1,6 @@
 import SwiftUI
 
-@available(iOS 13, *)
+@available(iOS 13, macOS 10.15, *)
 public struct FloatingLabelTextField: View {
     
     @State private var placeHolder: String = ""
@@ -36,6 +36,7 @@ public struct FloatingLabelTextField: View {
         return ZStack(alignment: .leading) {
             
             //onEditingChanged make the placeholder move to the top of the text field.
+			#if os(iOS)
             TextField(placeHolder, text: $text, onEditingChanged: { (edit) in
                 self.updateEditMode(edit: edit)
             })
@@ -47,9 +48,26 @@ public struct FloatingLabelTextField: View {
                 .foregroundColor(Color.black)
                 .accentColor(.gray)
                 .onAppear {
+					
                     self.placeHolder = self.placeHolderValue
                     
             }
+			#else
+			TextField(placeHolder, text: $text, onEditingChanged: { (edit) in
+				self.updateEditMode(edit: edit)
+			})
+				.font(.system(size: 20))
+				.padding()
+				.overlay( RoundedRectangle(cornerRadius: 8)
+					.stroke(Color.gray, lineWidth: 1)
+					.frame(height: 55))
+				.foregroundColor(Color.black)
+				.onAppear {
+					
+					self.placeHolder = self.placeHolderValue
+					
+			}
+			#endif
             
             //Text which acts as a floating label
             Text("\(placeHolderLabel)")

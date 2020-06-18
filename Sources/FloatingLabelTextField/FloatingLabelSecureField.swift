@@ -1,6 +1,6 @@
 import SwiftUI
 
-@available(iOS 13, *)
+@available(iOS 13, macOS 10.15, *)
 public struct FloatingLabelSecureField: View {
     
     @State private var placeHolder: String = ""
@@ -38,6 +38,7 @@ public struct FloatingLabelSecureField: View {
         Button(action: {
             self.updateEditMode(edit: true)
         }) {
+			#if os(iOS)
             SecureField(placeHolder, text: $text)
                 .font(.system(size: 20))
                 .padding()
@@ -49,6 +50,18 @@ public struct FloatingLabelSecureField: View {
                 .onAppear {
                     self.placeHolder = self.placeHolderValue
             }
+			#else
+			SecureField(placeHolder, text: $text)
+				.font(.system(size: 20))
+				.padding()
+				.overlay( RoundedRectangle(cornerRadius: 8)
+					.stroke(Color.gray, lineWidth: 1)
+					.frame(height: 55))
+				.foregroundColor(Color.black)
+				.onAppear {
+					self.placeHolder = self.placeHolderValue
+			}
+			#endif
         }  
         //Text which acts as a floating label
            Text("\(placeHolderLabel)")
