@@ -8,11 +8,14 @@ public struct FloatingLabelSecureField: View {
     private var placeHolderValue: String = ""
     @Binding var text: String
     @State private var isActive: Bool = false
+	var onEditingChanged: (Bool) -> Void
     
     public init(placeHolder: String = "Please Input",
-                text: Binding<String> = .constant("") ) {
+                text: Binding<String> = .constant(""),
+				onEditingChanged: @escaping (Bool) -> Void = { _ in }) {
         self._text = text
         self.placeHolderValue = placeHolder
+		self.onEditingChanged = onEditingChanged
         
     }
     //Function to remove focus from text field if tapped on another object.
@@ -28,6 +31,8 @@ public struct FloatingLabelSecureField: View {
             }
             self.isActive = false
         }
+		
+		self.onEditingChanged(edit)
     }
     
     public var body: some View {
